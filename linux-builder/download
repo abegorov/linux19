@@ -1,0 +1,4 @@
+#!/bin/bash
+
+wget -O - "https://git.kernel.org/torvalds/t/linux-${1}.tar.gz" \
+  | tar xfz - --strip-components=1

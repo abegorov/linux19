@@ -1,0 +1,67 @@
+services:
+  redmine:
+    container_name: redmine
+    image: ${REPO}/redmine:${REDMINE_VERSION}
+    build:
+      context: .
+      args:
+        REDMINE_VERSION: ${REDMINE_VERSION}
+    depends_on:
+      - db
+    secrets:
+      - source: redmine-secret
+        target: redmine-secret
+        mode: '0440'
+      - source: postgres-passwd
+        target: postgres-passwd
+        mode: '0440'
+    environment:
+      REDMINE_DB_POSTGRES: db
+      REDMINE_DB_DATABASE: redmine
+      REDMINE_DB_USERNAME: redmine
+      REDMINE_DB_PASSWORD_FILE: /run/secrets/postgres-passwd
+      REDMINE_SECRET_KEY_BASE_FILE: /run/secrets/redmine-secret
+    volumes:
+      - type: volume
+        source: files
+        target: /usr/src/redmine/files
+      - type: volume
+        source: plugin_assets
+        target: /usr/src/redmine/plugin_assets
+    ports:
+      - name: redmine
+        target: 3000
+        host_ip: ${REDMINE_IP}
+        published: ${REDMINE_PORT}
+        protocol: tcp
+        app_protocol: http
+        mode: host
+    restart: always
+
+  db:
+    container_name: redmine-db
+    image: postgres:${POSTGRES_VERSION}
+    secrets:
+      - source: postgres-passwd
+        target: postgres-passwd
+        mode: '0440'
+    environment:
+      POSTGRES_DB: redmine
+      POSTGRES_USER: redmine
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres-passwd
+    volumes:
+      - type: volume
+        source: dbdata
+        target: /var/lib/postgresql/data
+    restart: always
+
+secrets:
+  redmine-secret:
+    file: ./redmine-secret
+  postgres-passwd:
+    file: ./postgres-passwd
+
+volumes:
+  files:
+  plugin_assets:
+  dbdata:
