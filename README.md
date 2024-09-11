@@ -2,7 +2,7 @@
 
 ## Написать Docker-compose для приложения Redmine
 
-Был написан файл [docker-compose.yml)](redmine/docker-compose.yml) для запуска **Redmine** и [Dockerfile](redmine/Dockerfile) для добавления темы **Bleuclair** в **Redmine**.
+Был написан файл [docker-compose.yml](redmine/docker-compose.yml) для запуска **Redmine** и [Dockerfile](redmine/Dockerfile) для добавления темы **Bleuclair** в **Redmine**.
 
 Запустить **Redmine** в первый раз можно следующими командами:
 
